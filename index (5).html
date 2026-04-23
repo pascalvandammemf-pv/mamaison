@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Ma Maison">
+<meta name="theme-color" content="#ffffff">
+<title>Ma Maison</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f8fc;
+  --white:#ffffff;
+  --border:#e8eaf0;
+  --text:#1a1a2e;
+  --text2:#6b7080;
+  --text3:#b0b8c8;
+  --purple:#6c63ff;
+  --purple-l:#ede9ff;
+  --teal:#00c896;
+  --teal-l:#e0faf3;
+  --coral:#ff6b6b;
+  --coral-l:#fff0f0;
+  --amber:#ffb300;
+  --amber-l:#fff8e1;
+  --blue:#4facfe;
+  --blue-l:#e8f4ff;
+  --pink:#ff6fb0;
+  --pink-l:#fff0f7;
+  --r:16px;
+  --r2:12px;
+  --font:'Nunito',sans-serif;
+  --shadow:0 2px 12px rgba(108,99,255,0.08);
+  --shadow2:0 4px 20px rgba(108,99,255,0.18);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh;max-width:430px;margin:0 auto;overflow-x:hidden;}
+.app{padding-bottom:90px;}
+.header{padding:24px 20px 0;display:flex;justify-content:space-between;align-items:flex-start;}
+.header h1{font-size:26px;font-weight:800;color:var(--text);}
+.header h1 span{color:var(--purple);}
+.header .date{font-size:12px;color:var(--text2);margin-top:2px;font-weight:600;}
+.score-pill{background:var(--purple-l);border-radius:99px;padding:8px 14px;font-size:13px;font-weight:800;color:var(--purple);}
+.nav{display:flex;gap:8px;padding:16px 16px 0;overflow-x:auto;scrollbar-width:none;}
+.nav::-webkit-scrollbar{display:none;}
+.navbtn{flex-shrink:0;padding:8px 16px;border-radius:99px;border:none;font-size:13px;font-weight:700;cursor:pointer;background:var(--white);color:var(--text2);box-shadow:var(--shadow);transition:all 0.2s;font-family:var(--font);}
+.navbtn.on{color:#fff;}
+.section{display:none;padding:16px;}
+.section.on{display:block;}
+.card{background:var(--white);border-radius:var(--r);padding:16px;margin-bottom:10px;box-shadow:var(--shadow);}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.stat{border-radius:var(--r2);padding:16px;}
+.stat-lbl{font-size:11px;font-weight:700;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.05em;}
+.stat-num{font-size:28px;font-weight:800;}
+.prog-bg{height:8px;border-radius:99px;background:var(--border);margin:10px 0 4px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:99px;transition:width 0.5s cubic-bezier(.4,0,.2,1);}
+.prog-lbl{font-size:12px;color:var(--text2);font-weight:600;}
+.day-lbl{font-size:11px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:0.07em;margin:16px 0 6px 2px;}
+.task-row{display:flex;align-items:flex-start;gap:10px;padding:11px 0;border-bottom:1.5px solid var(--bg);cursor:pointer;transition:opacity 0.15s;}
+.task-row:last-child{border-bottom:none;padding-bottom:0;}
+.task-row:active{opacity:0.6;}
+.task-row.done .task-text{text-decoration:line-through;color:var(--text3);}
+.check{width:24px;height:24px;border-radius:8px;border:2px solid var(--border);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
+.check.on{border-color:transparent;}
+.check svg{display:none;}
+.check.on svg{display:block;}
+.task-body{flex:1;}
+.task-text{font-size:13px;font-weight:600;color:var(--text);line-height:1.5;}
+.task-days{font-size:11px;color:var(--text3);margin-top:1px;font-weight:500;}
+.who-badge{font-size:11px;padding:4px 10px;border-radius:99px;flex-shrink:0;margin-top:2px;font-weight:700;}
+.person-pill{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:var(--r);margin-bottom:8px;cursor:pointer;border:2px solid var(--border);transition:all 0.2s;background:var(--white);box-shadow:var(--shadow);}
+.avatar{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;flex-shrink:0;}
+.person-name{font-size:14px;font-weight:700;}
+.person-sub{font-size:12px;color:var(--text2);font-weight:500;}
+.phase-badge{display:inline-flex;font-size:11px;padding:4px 12px;border-radius:99px;font-weight:800;margin-bottom:10px;}
+.edit-row{display:flex;gap:6px;margin-bottom:6px;align-items:center;}
+.edit-row input,.edit-row select{background:var(--bg);border:1.5px solid var(--border);border-radius:10px;color:var(--text);font-size:12px;padding:8px 10px;font-family:var(--font);font-weight:600;}
+.edit-row input{flex:2;}
+.edit-row select{flex:1;}
+.btn-del{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--border);background:transparent;cursor:pointer;color:var(--text2);font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.add-section{background:var(--white);border-radius:var(--r);padding:16px;margin-top:10px;box-shadow:var(--shadow);}
+.add-section h3{font-size:14px;font-weight:800;margin-bottom:12px;}
+.form-row{margin-bottom:10px;}
+.form-row label{display:block;font-size:11px;color:var(--text2);margin-bottom:4px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;}
+.form-row input,.form-row select{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;color:var(--text);font-size:13px;padding:9px 12px;font-family:var(--font);font-weight:600;}
+.days-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.day-toggle{padding:7px 0;border-radius:8px;border:1.5px solid var(--border);background:var(--bg);color:var(--text2);font-size:11px;cursor:pointer;font-family:var(--font);font-weight:700;text-align:center;transition:all 0.15s;}
+.day-toggle.on{border-color:var(--purple);background:var(--purple-l);color:var(--purple);}
+.btn-submit{width:100%;padding:12px;border-radius:var(--r2);border:none;font-size:14px;font-weight:800;cursor:pointer;font-family:var(--font);margin-top:8px;background:var(--purple);color:#fff;box-shadow:0 4px 14px rgba(108,99,255,0.3);transition:all 0.2s;}
+.btn-submit:active{transform:scale(0.98);}
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(255,255,255,0.96);backdrop-filter:blur(20px);border-top:1.5px solid var(--border);display:flex;padding:10px 8px 22px;gap:2px;z-index:100;}
+.bnav{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 4px;border-radius:12px;cursor:pointer;border:none;background:transparent;color:var(--text2);font-size:10px;font-family:var(--font);font-weight:700;transition:all 0.2s;}
+.bnav.on{color:var(--purple);background:var(--purple-l);}
+.bnav-icon{font-size:20px;line-height:1;}
+.online-dot{width:7px;height:7px;border-radius:50%;background:var(--teal);display:inline-block;margin-right:5px;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.banner{border-radius:var(--r);padding:18px 20px;margin-bottom:14px;color:#fff;box-shadow:var(--shadow2);}
+.banner h2{font-size:17px;font-weight:800;margin-bottom:4px;}
+.banner p{font-size:12px;opacity:0.9;font-weight:600;}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div>
+      <h1>Ma <span>Maison</span> 🏠</h1>
+      <div class="date" id="topdate"></div>
+    </div>
+    <div class="score-pill" id="top-score">0/0 ✓</div>
+  </div>
+  <div class="nav">
+    <button class="navbtn on" id="nav-aujourd" onclick="goTab('aujourd')">☀️ Aujourd'hui</button>
+    <button class="navbtn" id="nav-semaine" onclick="goTab('semaine')">📅 Semaine</button>
+    <button class="navbtn" id="nav-personnes" onclick="goTab('personnes')">👨‍👩‍👧‍👦 Famille</button>
+    <button class="navbtn" id="nav-tri" onclick="goTab('tri')">📦 Tri</button>
+    <button class="navbtn" id="nav-edit" onclick="goTab('edit')">✏️ Modifier</button>
+  </div>
+  <div class="section on" id="tab-aujourd"></div>
+  <div class="section" id="tab-semaine"></div>
+  <div class="section" id="tab-personnes"></div>
+  <div class="section" id="tab-tri"></div>
+  <div class="section" id="tab-edit"></div>
+</div>
+<div class="bottom-nav">
+  <button class="bnav on" id="bn-aujourd" onclick="goTab('aujourd')"><span class="bnav-icon">☀️</span>Auj.</button>
+  <button class="bnav" id="bn-semaine" onclick="goTab('semaine')"><span class="bnav-icon">📅</span>Semaine</button>
+  <button class="bnav" id="bn-personnes" onclick="goTab('personnes')"><span class="bnav-icon">👨‍👩‍👧‍👦</span>Famille</button>
+  <button class="bnav" id="bn-tri" onclick="goTab('tri')"><span class="bnav-icon">📦</span>Tri</button>
+  <button class="bnav" id="bn-edit" onclick="goTab('edit')"><span class="bnav-icon">✏️</span>Modifier</button>
+</div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, set, onValue, update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+const firebaseConfig={apiKey:"AIzaSyArP6dc0N3j_EC3cnTndYh4KCuX2txet7Q",authDomain:"mamaison-bf7b6.firebaseapp.com",databaseURL:"https://mamaison-bf7b6-default-rtdb.europe-west1.firebasedatabase.app",projectId:"mamaison-bf7b6",storageBucket:"mamaison-bf7b6.firebasestorage.app",messagingSenderId:"531996720785",appId:"1:531996720785:web:4a8eccefb56f34b6e70930"};
+const fbapp=initializeApp(firebaseConfig);
+const db=getDatabase(fbapp);
+const PEOPLE=[
+  {id:'p1',name:'Parent 1',initials:'P1',color:'#6c63ff',bg:'#ede9ff'},
+  {id:'p2',name:'Parent 2',initials:'P2',color:'#ff6fb0',bg:'#fff0f7'},
+  {id:'a17',name:'17 ans',initials:'17',color:'#00c896',bg:'#e0faf3'},
+  {id:'a14',name:'14 ans',initials:'14',color:'#ffb300',bg:'#fff8e1'},
+  {id:'tous',name:'Tous',initials:'⊕',color:'#4facfe',bg:'#e8f4ff'},
+];
+const DAYS=['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
+const TC={instant:'#00c896',weekly:'#4facfe',deep:'#6c63ff',sort:'#ff6b6b'};
+const TL={instant:'⚡ Geste immédiat',weekly:'🔁 Régulier',deep:'🧹 Nettoyage profond',sort:'📦 Tri'};
+const NC={aujourd:'#6c63ff',semaine:'#4facfe',personnes:'#00c896',tri:'#ff6b6b',edit:'#ffb300'};
+let tasks=[
+  {id:1,text:'Lavabo SdB essuyé après passage',who:'tous',type:'instant',days:['Lun','Mar','Mer','Jeu','Ven','Sam','Dim']},
+  {id:2,text:'Lit fait avant de partir',who:'tous',type:'instant',days:['Lun','Mar','Mer','Jeu','Ven','Sam','Dim']},
+  {id:3,text:'Cuisine essuyée + vaisselle rangée',who:'tous',type:'instant',days:['Lun','Mar','Mer','Jeu','Ven','Sam','Dim']},
+  {id:4,text:'Aspirateur salon (alternance)',who:'a14',type:'weekly',days:['Lun','Mar','Mer']},
+  {id:5,text:'WC haut + bas nettoyés',who:'a17',type:'weekly',days:['Ven']},
+  {id:6,text:'Machine à laver lancée',who:'p1',type:'weekly',days:['Jeu','Ven']},
+  {id:7,text:'15 min de tri dans 1 zone',who:'tous',type:'sort',days:['Ven']},
+  {id:8,text:'Nettoyage SdB complet',who:'p1',type:'deep',days:['Sam']},
+  {id:9,text:'Tri ciblé de la semaine (45 min)',who:'tous',type:'sort',days:['Sam']},
+  {id:10,text:'Aspiration + lavage sols salon/cuisine',who:'a14',type:'weekly',days:['Sam']},
+  {id:11,text:'Cuisine : nettoyage profond',who:'p1',type:'deep',days:['Sam']},
+  {id:12,text:'Chambres enfants : tri personnel',who:'a14',type:'sort',days:['Sam']},
+  {id:13,text:'Grande chambre nettoyage + tri',who:'p2',type:'deep',days:['Dim']},
+  {id:14,text:'Linge plié et rangé',who:'tous',type:'weekly',days:['Dim']},
+  {id:15,text:'1 boîte remplie pour donner/jeter',who:'tous',type:'sort',days:['Dim']},
+  {id:16,text:'Poussière surfaces salons',who:'a17',type:'weekly',days:['Sam']},
+  {id:17,text:'Sol balayé cuisine',who:'a14',type:'instant',days:['Lun','Mar','Mer','Jeu','Ven','Sam','Dim']},
+  {id:18,text:'Chambre 17 ans aspirée',who:'a17',type:'weekly',days:['Sam']},
+  {id:19,text:'Chambre 14 ans aspirée',who:'a14',type:'weekly',days:['Sam']},
+];
+let sortZones=[
+  {id:'s1',week:1,phase:1,name:'Buanderie — tout vider et décider'},
+  {id:'s2',week:1,phase:1,name:'Cuisine : placards doublons et périmés'},
+  {id:'s3',week:2,phase:1,name:'Salons : meubles déco, livres jamais lus'},
+  {id:'s4',week:2,phase:1,name:'Entrée : chaussures, manteaux, sacs'},
+  {id:'s5',week:3,phase:2,name:'Vêtements — chacun trie les siens'},
+  {id:'s6',week:4,phase:2,name:'Papiers : classement et tri'},
+  {id:'s7',week:5,phase:2,name:'Câbles, électronique, gadgets oubliés'},
+  {id:'s8',week:5,phase:2,name:'SdB : produits périmés, doublons cosmétiques'},
+  {id:'s9',week:6,phase:3,name:'Tour final cuisine : chaque tiroir défini'},
+  {id:'s10',week:7,phase:3,name:'Tour final chambres : chaque étagère définie'},
+  {id:'s11',week:8,phase:3,name:'Règle 1 in/1 out : ancrage définitif'},
+];
+let checked={},sortDone={},viewPerson='p1',selectedDays=[],currentTab='aujourd';
+onValue(ref(db,'checked'),s=>{checked=s.val()||{};renderCurrent();});
+onValue(ref(db,'sortDone'),s=>{sortDone=s.val()||{};if(currentTab==='tri')renderTri();});
+onValue(ref(db,'tasks'),s=>{if(s.val()){tasks=s.val();}renderCurrent();});
+onValue(ref(db,'names'),s=>{if(s.val()){Object.entries(s.val()).forEach(([id,name])=>{const p=PEOPLE.find(p=>p.id===id);if(p)p.name=name;});}renderCurrent();});
+function gp(id){return PEOPLE.find(p=>p.id===id)||PEOPLE[4];}
+function wb(who){const p=gp(who);return `<span class="who-badge" style="background:${p.bg};color:${p.color};">${p.name}</span>`;}
+function today(){const d=new Date();return DAYS[d.getDay()===0?6:d.getDay()-1];}
+function renderCurrent(){if(currentTab==='aujourd')renderToday();else if(currentTab==='semaine')renderSemaine();else if(currentTab==='personnes')renderPersonnes();}
+function renderToday(){
+  const day=today();
+  const tt=tasks.filter(t=>t.days&&t.days.includes(day));
+  const done=tt.filter(t=>checked[day+'-'+t.id]).length;
+  const pct=tt.length?Math.round(done/tt.length*100):0;
+  const em=pct===100?'🎉':pct>50?'💪':'✨';
+  let html=`<div class="banner" style="background:linear-gradient(135deg,#6c63ff,#a78bfa);">
+    <h2>${em} ${day} — On s'y met !</h2>
+    <p><span class="online-dot"></span>Synchro famille active · ${done}/${tt.length} tâches faites</p>
+  </div>
+  <div class="stat-grid">
+    <div class="stat" style="background:#ede9ff"><div class="stat-lbl" style="color:#6c63ff">Total</div><div class="stat-num" style="color:#6c63ff">${tt.length}</div></div>
+    <div class="stat" style="background:#e0faf3"><div class="stat-lbl" style="color:#00c896">Faites ✓</div><div class="stat-num" style="color:#00c896">${done}</div></div>
+  </div>
+  <div class="prog-bg"><div class="prog-fill" style="width:${pct}%;background:linear-gradient(90deg,#6c63ff,#00c896);"></div></div>
+  <div class="prog-lbl" style="margin-bottom:4px;">${pct}% accompli aujourd'hui</div>`;
+  const bt={};tt.forEach(t=>{if(!bt[t.type])bt[t.type]=[];bt[t.type].push(t);});
+  ['instant','weekly','sort','deep'].forEach(type=>{
+    if(!bt[type])return;
+    html+=`<div class="day-lbl">${TL[type]}</div><div class="card">`;
+    bt[type].forEach(t=>{
+      const key=day+'-'+t.id,isDone=!!checked[key];
+      html+=`<div class="task-row${isDone?' done':''}" onclick="window._toggle('${key}')">
+        <div class="check${isDone?' on':''}" style="${isDone?'background:'+TC[type]+';':''}"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><polyline points="2,7 5.5,10 11,3" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="task-body"><div class="task-text">${t.text}</div></div>${wb(t.who)}</div>`;
+    });
+    html+='</div>';
+  });
+  if(!tt.length)html+=`<div style="text-align:center;padding:48px 20px;"><div style="font-size:52px;margin-bottom:12px;">🎉</div><div style="font-size:15px;font-weight:700;color:#6b7080;">Rien à faire aujourd'hui !</div></div>`;
+  document.getElementById('tab-aujourd').innerHTML=html;
+  document.getElementById('top-score').textContent=done+'/'+tt.length+' ✓';
+}
+function renderSemaine(){
+  let html='';
+  DAYS.forEach(day=>{
+    const dt=tasks.filter(t=>t.days&&t.days.includes(day));
+    if(!dt.length)return;
+    const done=dt.filter(t=>checked[day+'-'+t.id]).length;
+    const pct=Math.round(done/dt.length*100);
+    const isTd=day===today();
+    html+=`<div class="card" style="${isTd?'border:2px solid #6c63ff;':''}">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <span style="font-size:15px;font-weight:800;${isTd?'color:#6c63ff':''}">${day}${isTd?' 👈':''}</span>
+        <span style="font-size:13px;font-weight:700;color:#6b7080;">${done}/${dt.length}</span>
+      </div>
+      <div class="prog-bg" style="margin-top:0;"><div class="prog-fill" style="width:${pct}%;background:${pct===100?'#00c896':'#4facfe'};"></div></div>`;
+    dt.forEach(t=>{
+      const key=day+'-'+t.id,isDone=!!checked[key];
+      html+=`<div class="task-row${isDone?' done':''}" onclick="window._toggle('${key}')">
+        <div class="check${isDone?' on':''}" style="${isDone?'background:'+TC[t.type]+';':''}"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><polyline points="2,7 5.5,10 11,3" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="task-text">${t.text}</div>${wb(t.who)}</div>`;
+    });
+    html+='</div>';
+  });
+  document.getElementById('tab-semaine').innerHTML=html;
+}
+function renderPersonnes(){
+  let html='<div style="margin-bottom:12px;">';
+  PEOPLE.forEach(p=>{
+    const cnt=tasks.filter(t=>t.who===p.id).length,isSel=viewPerson===p.id;
+    html+=`<div class="person-pill${isSel?' sel':''}" onclick="window._svp('${p.id}')" style="${isSel?'border-color:'+p.color+';background:'+p.bg+';':''}">
+      <div class="avatar" style="background:${p.bg};color:${p.color};">${p.initials}</div>
+      <div><div class="person-name">${p.name}</div><div class="person-sub">${cnt} tâche${cnt>1?'s':''} assignée${cnt>1?'s':''}</div></div></div>`;
+  });
+  html+='</div>';
+  const p=gp(viewPerson),myT=tasks.filter(t=>t.who===viewPerson);
+  if(!myT.length){html+=`<div style="color:#6b7080;font-size:13px;padding:16px;font-weight:600;">Aucune tâche assignée</div>`;}
+  else{
+    const bt={};myT.forEach(t=>{if(!bt[t.type])bt[t.type]=[];bt[t.type].push(t);});
+    ['instant','weekly','sort','deep'].forEach(type=>{
+      if(!bt[type])return;
+      html+=`<div class="day-lbl">${TL[type]}</div><div class="card">`;
+      bt[type].forEach(t=>{
+        html+=`<div class="task-row"><div style="width:10px;height:10px;border-radius:50%;background:${TC[type]};flex-shrink:0;margin-top:4px;"></div>
+          <div class="task-body"><div class="task-text">${t.text}</div><div class="task-days">${t.days.join(' · ')}</div></div></div>`;
+      });
+      html+='</div>';
+    });
+  }
+  document.getElementById('tab-personnes').innerHTML=html;
+}
+function renderTri(){
+  const done=Object.values(sortDone).filter(Boolean).length,pct=Math.round(done/sortZones.length*100);
+  const PC={1:{bg:'#fff0f0',color:'#ff6b6b',label:'🧹 Phase 1 — Déblayer'},2:{bg:'#e8f4ff',color:'#4facfe',label:'📂 Phase 2 — Catégories'},3:{bg:'#e0faf3',color:'#00c896',label:'✅ Phase 3 — Ancrer'}};
+  let html=`<div class="banner" style="background:linear-gradient(135deg,#ff6b6b,#ffb300);">
+    <h2>📦 Désencombrement</h2>
+    <p>${done} zone${done>1?'s':''} triée${done>1?'s':''} sur ${sortZones.length} · ${pct}% accompli</p>
+  </div>
+  <div class="prog-bg"><div class="prog-fill" style="width:${pct}%;background:linear-gradient(90deg,#ff6b6b,#ffb300);"></div></div>
+  <div class="prog-lbl" style="margin-bottom:16px;">Programme 8 semaines</div>`;
+  const wks={};sortZones.forEach(z=>{if(!wks[z.week])wks[z.week]=[];wks[z.week].push(z);});
+  [1,2,3,4,5,6,7,8].forEach(w=>{
+    if(!wks[w])return;
+    const ph=wks[w][0].phase,pc=PC[ph];
+    html+=`<div class="card"><div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+      <span class="phase-badge" style="background:${pc.bg};color:${pc.color};">${pc.label}</span>
+      <span style="font-size:12px;color:#6b7080;font-weight:600;">Semaine ${w}</span></div>`;
+    wks[w].forEach(z=>{
+      const isDone=!!sortDone[z.id];
+      html+=`<div class="task-row${isDone?' done':''}" onclick="window._tSort('${z.id}')">
+        <div class="check${isDone?' on':''}" style="${isDone?'background:'+pc.color+';':''}"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><polyline points="2,7 5.5,10 11,3" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="task-text">${z.name}</div></div>`;
+    });
+    html+='</div>';
+  });
+  document.getElementById('tab-tri').innerHTML=html;
+}
+function renderEdit(){
+  let html=`<div style="font-size:12px;color:#6b7080;margin-bottom:12px;font-weight:600;"><span class="online-dot"></span>Modifications synchronisées pour toute la famille.</div>`;
+  html+=`<div class="card" style="margin-bottom:10px;">
+    <div style="font-size:13px;font-weight:800;margin-bottom:12px;">👤 Noms de la famille</div>`;
+  PEOPLE.filter(p=>p.id!=='tous').forEach(p=>{
+    html+=`<div class="edit-row">
+      <div class="avatar" style="width:28px;height:28px;font-size:11px;background:${p.bg};color:${p.color};flex-shrink:0;">${p.initials}</div>
+      <input value="${p.name}" onchange="window._updName('${p.id}',this.value)" placeholder="Nom...">
+    </div>`;
+  });
+  html+=`</div><div class="card">`;
+  tasks.forEach(t=>{
+    html+=`<div class="edit-row">
+      <div style="width:10px;height:10px;border-radius:50%;background:${TC[t.type]};flex-shrink:0;margin-top:4px;"></div>
+      <input value="${t.text}" onchange="window._upd(${t.id},'text',this.value)">
+      <select onchange="window._upd(${t.id},'who',this.value)">${PEOPLE.map(p=>`<option value="${p.id}"${p.id===t.who?' selected':''}>${p.name}</option>`).join('')}</select>
+      <button class="btn-del" onclick="window._del(${t.id})">×</button></div>`;
+  });
+  html+=`</div><div class="add-section"><h3>➕ Nouvelle tâche</h3>
+    <div class="form-row"><label>Description</label><input id="new-text" placeholder="Ex: Passer l'aspirateur..."></div>
+    <div class="form-row"><label>Assigné à</label><select id="new-who">${PEOPLE.map(p=>`<option value="${p.id}">${p.name}</option>`).join('')}</select></div>
+    <div class="form-row"><label>Type</label><select id="new-type">
+      <option value="instant">⚡ Geste immédiat</option><option value="weekly">🔁 Régulier</option>
+      <option value="deep">🧹 Nettoyage profond</option><option value="sort">📦 Tri</option></select></div>
+    <div class="form-row"><label>Jours</label><div class="days-grid">${DAYS.map(d=>`<button class="day-toggle" onclick="window._tDay('${d}',this)">${d}</button>`).join('')}</div></div>
+    <button class="btn-submit" onclick="window._add()">Ajouter la tâche ✓</button></div>`;
+  document.getElementById('tab-edit').innerHTML=html;
+}
+window._updName=function(id,val){const p=PEOPLE.find(p=>p.id===id);if(p&&val.trim()){p.name=val.trim();update(ref(db,'names'),{[id]:val.trim()});renderCurrent();}};
+window._toggle=function(key){const v=!checked[key];checked[key]=v;update(ref(db,'checked'),{[key]:v});renderCurrent()};
+window._tSort=function(id){const v=!sortDone[id];sortDone[id]=v;update(ref(db,'sortDone'),{[id]:v});renderTri();};
+window._svp=function(id){viewPerson=id;renderPersonnes();};
+window._upd=function(id,f,v){const t=tasks.find(t=>t.id===id);if(t){t[f]=v;set(ref(db,'tasks'),tasks);}};
+window._del=function(id){tasks=tasks.filter(t=>t.id!==id);set(ref(db,'tasks'),tasks);renderEdit();renderCurrent();};
+window._tDay=function(d,el){el.classList.toggle('on');if(el.classList.contains('on')){if(!selectedDays.includes(d))selectedDays.push(d);}else{selectedDays=selectedDays.filter(x=>x!==d);}};
+window._add=function(){
+  const text=document.getElementById('new-text').value.trim(),who=document.getElementById('new-who').value,type=document.getElementById('new-type').value;
+  if(!text||!selectedDays.length){alert('Remplis la description et sélectionne au moins un jour.');return;}
+  tasks.push({id:Date.now(),text,who,type,days:[...selectedDays]});
+  set(ref(db,'tasks'),tasks);selectedDays=[];renderEdit();renderCurrent();
+};
+window.goTab=function(name){
+  currentTab=name;
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.navbtn').forEach(b=>{b.classList.remove('on');b.style.background='';b.style.color='';});
+  document.querySelectorAll('.bnav').forEach(b=>b.classList.remove('on'));
+  document.getElementById('tab-'+name).classList.add('on');
+  const nb=document.getElementById('nav-'+name);
+  nb.classList.add('on');nb.style.background=NC[name];nb.style.color='#fff';
+  document.getElementById('bn-'+name).classList.add('on');
+  if(name==='aujourd')renderToday();else if(name==='semaine')renderSemaine();
+  else if(name==='personnes')renderPersonnes();else if(name==='tri')renderTri();else renderEdit();
+};
+const J=['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'];
+const M=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+const n=new Date();
+document.getElementById('topdate').textContent=J[n.getDay()]+' '+n.getDate()+' '+M[n.getMonth()];
+document.getElementById('nav-aujourd').style.background=NC['aujourd'];
+document.getElementById('nav-aujourd').style.color='#fff';
+renderToday();
+</script>
+</body>
+</html>
